@@ -81,7 +81,7 @@ func InsertRecord(link model.Link) error {
 		return err
 	}
 	query := 
-		`INSERT INTO Links(Hash , URL , ExpiryDate) VALUES (? , ? , DATE_ADD(NOW() , INTERVAL 1 MINUTE)) ;`
+		`INSERT IGNORE INTO Links(Hash , URL , ExpiryDate) VALUES (? , ? , DATE_ADD(NOW() , INTERVAL 30 MINUTE)) ;`
 	rows , err := db.Query(query , link.Hash , link.URL)
 	_ = rows
 	db.Close()
@@ -105,16 +105,16 @@ func SelectRecord(hash string) (model.Link , error) {
 	}
 	query := 
 		`SELECT Hash , URL , UsedCount FROM Links WHERE Hash = ? ;`
+	// TODO
 	rows , err := db.Query(query , hash)
 	if err != nil {
 		panic(err)
-	}
+	}	
 	db.Close()
-	if rows.Next() {
+	for rows.Next() {
 		err = rows.Scan(&link.Hash , &link.URL , &link.UsedCount)
 		return link , nil
-	} else {
-		return link , errors.New("No Such Link or Linked Expired")
 	}
+	return link , errors.New("No Such Link or Linked Expired")
 }
 
