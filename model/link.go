@@ -7,7 +7,7 @@ import (
 	"time"
 	"math/rand"
 	"crypto/md5"
-	"encoding/base64"
+	"encoding/hex"
 )
 
 type Link struct {
@@ -25,7 +25,7 @@ func getRandomString(length int) string {
 func getHash(str string) string {
 	str += getRandomString(8)
 	md5 := md5.Sum([]byte(str))
-	hash := base64.StdEncoding.EncodeToString(md5[:])
+	hash := hex.EncodeToString(md5[:])
 	return hash[:8]
 }
 
