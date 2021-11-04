@@ -27,6 +27,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	// TODO : Delete line below
+	err = db.DropTable()
 	err = db.CreateTable()
 	if err != nil {
 		panic(err)
@@ -37,7 +39,8 @@ func main() {
 	templates := &Template {template.Must(template.ParseGlob("templates/*.html"))}
 	server.Renderer = templates
 	server.GET("/" , handler.HomePage)
-	server.POST("/get" , handler.StoreLink)
+	server.POST("/new" , handler.StoreLink)
+	server.POST("/usage" , handler.ShowUsage)
 	server.GET("/link/:shortLink" , handler.Redirect)
 	server.Logger.Fatal(server.Start(":1323"))
 }

@@ -70,11 +70,17 @@
 	<main>
 		<body>
 		<h1>Leprechaun : URL Shortener</h1>
-		<form action="/get" method="post">
-		    <input type="text" id="input" name="URL" placeholder="Enter URL Here">
-		<div class="buttons">
-			    <button type="submit" id="shorten" value="get">Shorten</button>
-		</div>
+		<form action="/new" method="post">
+		    <input type="text" id="input" name="URL" placeholder="Enter Long URL Here">
+			<div class="buttons">
+			    <button type="submit" id="Shorten" value="new">Shorten</button>
+			</div>
+		</form>
+		<form action="/usage" method="post">
+		    <input type="text" id="input" name="shortLink" placeholder="Enter Short URL Here">
+			<div class="buttons">
+				<button type="submit" id="CheckUsage" value="usage">Check Usage</button>
+			</div>
 		</form>
 		</body>
 	</main>

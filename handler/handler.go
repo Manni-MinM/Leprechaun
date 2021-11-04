@@ -31,6 +31,15 @@ func StoreLink(ctx echo.Context) error {
 	}()
 	return ctx.String(http.StatusOK , fmt.Sprintf("You Leprechaun URL : %s/link/%s" , ctx.Request().Host , newLink.Hash))
 }
+func ShowUsage(ctx echo.Context) error {
+	shortLink := ctx.FormValue("shortLink")
+	link , err := db.SelectRecord(shortLink)
+	if err != nil {
+		return ctx.String(http.StatusBadRequest , "Invalid or Expired Link")
+	} else {
+		return ctx.String(http.StatusOK , fmt.Sprintf("This Link has Been Used %d Times" , link.UsedCount))
+	}
+}
 func Redirect(ctx echo.Context) error {
 	shortLink := ctx.Param("shortLink")
 	link , err := db.SelectRecord(shortLink)
