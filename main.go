@@ -4,10 +4,10 @@ package main
 
 import (
 	"io"
-	"net/http"
 	"html/template"
 
 	"github.com/Manni-MinM/Leprechaun/db"
+	"github.com/Manni-MinM/Leprechaun/handler"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -22,7 +22,12 @@ func (template *Template) Render(writer io.Writer , filename string , data inter
 }
 
 func main() {
-	err := db.New()
+	var err error
+	err = db.New()
+	if err != nil {
+		panic(err)
+	}
+	err = db.CreateTable()
 	if err != nil {
 		panic(err)
 	}
@@ -31,11 +36,9 @@ func main() {
 	server.Use(middleware.Recover())
 	templates := &Template {template.Must(template.ParseGlob("templates/*.html"))}
 	server.Renderer = templates
-	server.GET("/" , test)
+	server.GET("/" , handler.HomePage)
+	server.POST("/get" , handler.StoreLink)
+	server.GET("/link/:shortLink" , handler.Redirect)
 	server.Logger.Fatal(server.Start(":1323"))
-}
-
-func test(ctx echo.Context) error {
-	return ctx.Render(http.StatusOK , "index.html" , nil)
 }
 
