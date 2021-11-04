@@ -1,0 +1,81 @@
+<html>
+<head>
+    <title>Leprechaun</title>
+</head>
+	<style>
+	*,
+	*::before,
+	*::after {
+	  box-sizing: border-box;
+	}
+
+	body {
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  padding: 1rem;
+	}
+
+	body {
+	  min-height: 100vh;
+	  font-family: "Lato", sans-serif;
+	  line-height: 1.5;
+	  color: #111;
+	}
+
+	main {
+	  max-width: 720px;
+	  width: 100%;
+	  border: 2.5px solid #330867;
+	  border-radius: 2.5px;
+	  box-shadow: 0 10px 20px rgba(17, 17, 17, 0.125),
+		0 5px 5px rgba(17, 17, 17, 0.25);
+	  background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+	}
+
+	h1 {
+	  padding: 1rem;
+	  color: white;
+	}
+
+	input,
+	button {
+	  font-family: inherit;
+	  line-height: inherit;
+	  color: inherit;
+	  border: 0;
+	  padding: 1rem;
+	}
+
+	input {
+	  box-sizing: border-box;
+	  width: 100%;
+	}
+
+	.buttons {
+		display: flex;
+	}
+
+	button {
+	  font-size: large;
+	  cursor: pointer;
+	  flex: 1;
+	  background-color: transparent;
+	  color: white;
+	  &:hover {
+		background-color: rgba(255, 255, 255, 0.5);
+	  }
+	}
+	</style>
+	<main>
+		<body>
+		<h1>Leprechaun : URL Shortener</h1>
+		<form action="/get" method="post">
+		    <input type="text" id="input" name="URL" placeholder="Enter URL Here">
+		<div class="buttons">
+			    <button type="submit" id="shorten" value="get">Shorten</button>
+		</div>
+		</form>
+		</body>
+	</main>
+</html>

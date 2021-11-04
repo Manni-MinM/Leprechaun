@@ -3,41 +3,39 @@
 package main
 
 import (
-	"fmt"
+	"io"
+	"net/http"
+	"html/template"
 
 	"github.com/Manni-MinM/Leprechaun/db"
-	"github.com/Manni-MinM/Leprechaun/model"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
+type Template struct {
+	templates *template.Template
+}
+
+func (template *Template) Render(writer io.Writer , filename string , data interface{} , ctx echo.Context) error {
+	return template.templates.ExecuteTemplate(writer , filename , data)
+}
+
 func main() {
-	db.New()
-	db.CreateTable()
-
-	link1 := model.GetLink("google.com")
-	link2 := model.GetLink("aut.ac.ir")
-/*
-	db.InsertRecord(link1)
-	db.InsertRecord(link2)
-*/
-	var err error
-	var linkRes model.Link
-	linkRes , err = db.SelectRecord("eiJvTO4a")
-	if err == nil {
-		fmt.Println(linkRes)
-	} else {
-		fmt.Println(err)
+	err := db.New()
+	if err != nil {
+		panic(err)
 	}
+	server := echo.New()
+	server.Use(middleware.Logger())
+	server.Use(middleware.Recover())
+	templates := &Template {template.Must(template.ParseGlob("templates/*.html"))}
+	server.Renderer = templates
+	server.GET("/" , test)
+	server.Logger.Fatal(server.Start(":1323"))
+}
 
-	linkRes , err= db.SelectRecord("HVkg9LRL")
-	if err == nil {
-		fmt.Println(linkRes)
-	} else {
-		fmt.Println(err)
-	}
-
-	_ = link1
-	_ = link2
-	_ = err
-	_ = linkRes
+func test(ctx echo.Context) error {
+	return ctx.Render(http.StatusOK , "index.html" , nil)
 }
 
