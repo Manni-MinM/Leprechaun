@@ -12,7 +12,7 @@ import (
 	_"github.com/go-sql-driver/mysql"
 )
 
-func New() {
+func New() error {
 	dbDriver := "mysql"
 	dbUser := "root"
 	dbPassword := "pashmak64bit"
@@ -26,10 +26,8 @@ func New() {
 	queryCreate :=
 		`CREATE DATABASE IF NOT EXISTS Leprechaun ;`
 	rows , err := db.Query(queryCreate)
-	if err != nil {
-		panic(err)
-	}
 	_ = rows
+	return err
 }
 func Connect() (db *sql.DB) {
 	dbDriver := "mysql"
