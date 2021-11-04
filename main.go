@@ -22,6 +22,7 @@ func (template *Template) Render(writer io.Writer , filename string , data inter
 }
 
 func main() {
+	// create db and table
 	var err error
 	err = db.New()
 	if err != nil {
@@ -33,15 +34,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	// initialize server and templates
 	server := echo.New()
 	server.Use(middleware.Logger())
 	server.Use(middleware.Recover())
 	templates := &Template {template.Must(template.ParseGlob("templates/*.html"))}
 	server.Renderer = templates
+	// setup server routing
 	server.GET("/" , handler.HomePage)
 	server.POST("/new" , handler.StoreLink)
 	server.POST("/usage" , handler.ShowUsage)
 	server.GET("/link/:shortLink" , handler.Redirect)
+	// launch server
 	server.Logger.Fatal(server.Start(":1323"))
 }
 
