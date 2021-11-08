@@ -99,7 +99,7 @@ func InsertRecord(link model.Link , expiryDate string) error {
 	if err != nil {
 		return err
 	}
-	// insert record into table
+	// create query based on expiry date
 	query := ""
 	if expiryDate == "one_month" {
 		query = 
@@ -111,6 +111,7 @@ func InsertRecord(link model.Link , expiryDate string) error {
 		query = 
 			`INSERT IGNORE INTO Links(Hash , URL , ExpiryDate) VALUES (? , ? , DATE_ADD(NOW() , INTERVAL 1 DAY)) ;`
 	}
+	// insert record into table
 	rows , err := db.Query(query , link.Hash , link.URL)
 	_ = rows
 	// close connection to mysql

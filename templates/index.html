@@ -72,6 +72,7 @@
 		<h1>Leprechaun : URL Shortener</h1>
 		<form action="/new" method="post">
 		    <input type="text" id="input" name="URL" placeholder="Enter Long URL Here">
+		    <input type="text" id="input" name="desired_shortlink" placeholder="Enter Desired Short URL Here">
 			<p>Expiry Date:</p>
 			<input type="radio" id="one_month" name="expiry_date" value="one_month">
 			<label for="one_month">1 Month</label><br>
@@ -84,7 +85,7 @@
 			</div>
 		</form>
 		<form action="/usage" method="post">
-		    <input type="text" id="input" name="shortLink" placeholder="Enter Short URL Here">
+		    <input type="text" id="input" name="shortlink" placeholder="Enter Short URL Here">
 			<div class="buttons">
 				<button type="submit" id="CheckUsage" value="usage">Check Usage</button>
 			</div>

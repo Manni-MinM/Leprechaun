@@ -44,7 +44,7 @@ func main() {
 	server.GET("/" , handler.HomePage)
 	server.POST("/new" , handler.StoreLink)
 	server.POST("/usage" , handler.ShowUsage)
-	server.GET("/link/:shortLink" , handler.Redirect)
+	server.GET("/link/:shortlink" , handler.Redirect)
 	// launch server
 	server.Logger.Fatal(server.Start(":1323"))
 }
