@@ -1,4 +1,4 @@
-i// BWOTSHEWCHb
+// BWOTSHEWCHb
 
 package db
 
@@ -91,7 +91,7 @@ func ExpireRecord(hash string) error {
 	return err
 }
 // insert record into db
-func InsertRecord(link model.Link) error {
+func InsertRecord(link model.Link , expiryDate string) error {
 	// get db instance
 	db := Connect()
 	// check if record has expired and return if so
@@ -100,8 +100,17 @@ func InsertRecord(link model.Link) error {
 		return err
 	}
 	// insert record into table
-	query := 
-		`INSERT IGNORE INTO Links(Hash , URL , ExpiryDate) VALUES (? , ? , DATE_ADD(NOW() , INTERVAL 30 MINUTE)) ;`
+	query := ""
+	if expiryDate == "one_month" {
+		query = 
+			`INSERT IGNORE INTO Links(Hash , URL , ExpiryDate) VALUES (? , ? , DATE_ADD(NOW() , INTERVAL 1 MONTH)) ;`
+	} else if expiryDate == "one_week" {
+		query = 
+			`INSERT IGNORE INTO Links(Hash , URL , ExpiryDate) VALUES (? , ? , DATE_ADD(NOW() , INTERVAL 1 WEEK)) ;`
+	} else {
+		query = 
+			`INSERT IGNORE INTO Links(Hash , URL , ExpiryDate) VALUES (? , ? , DATE_ADD(NOW() , INTERVAL 1 DAY)) ;`
+	}
 	rows , err := db.Query(query , link.Hash , link.URL)
 	_ = rows
 	// close connection to mysql

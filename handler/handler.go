@@ -21,10 +21,11 @@ func HomePage(ctx echo.Context) error {
 func StoreLink(ctx echo.Context) error {
 	URL := ctx.FormValue("URL")
 	URL = util.ToAbsURL(URL)
+	expiryDate := ctx.FormValue("expiry_date")
 	newLink := model.GetLink(URL)
 	// add record to db
 	go func() {
-		err := db.InsertRecord(newLink)
+		err := db.InsertRecord(newLink , expiryDate)
 		if err != nil {
 			panic(err)
 		}
