@@ -3,7 +3,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Manni-MinM/Leprechaun/db"
@@ -68,7 +67,6 @@ func ShowUsage(ctx echo.Context) error {
 // redirects user from short URL to original URL and increments Used Count of link by 1
 func Redirect(ctx echo.Context) error {
 	shortLink := ctx.Param("shortlink")
-	fmt.Println(shortLink)
 	// get record from db
 	link , err := db.SelectRecord(shortLink)
 	if err != nil {

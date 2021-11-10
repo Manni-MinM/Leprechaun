@@ -7,6 +7,7 @@ import (
 	"errors"
 	"database/sql"
 
+	"github.com/Manni-MinM/Leprechaun/util"
 	"github.com/Manni-MinM/Leprechaun/model"
 
 	_"github.com/go-sql-driver/mysql"
@@ -32,7 +33,7 @@ func New() error {
 	return err
 }
 // connects to mysql and returns db instance
-func Connect() (db *sql.DB) {
+func Connect() (*sql.DB , error) {
 	// initialize variables	
 	dbDriver := "mysql"
 	dbUser := "root"
@@ -41,15 +42,15 @@ func Connect() (db *sql.DB) {
 	// connect to mysql
 	key := fmt.Sprintf("%s:%s@/%s" , dbUser , dbPassword , dbName)
 	db , err := sql.Open(dbDriver , key)
-	if err != nil {
-		panic(err)
-	}
-	return db
+	return db , err
 }
 // creates new table in db
 func CreateTable() error {
 	// get db instance
-	db := Connect()
+	db , err := Connect()
+	if err != nil {
+		return err
+	}
 	// create new table in db
 	query :=
 		`CREATE TABLE IF NOT EXISTS Links(
@@ -67,7 +68,10 @@ func CreateTable() error {
 // deletes table in db
 func DropTable() error {
 	// get db instance
-	db := Connect()
+	db , err := Connect()
+	if err != nil {
+		return err
+	}
 	// deletes Links table in db
 	query :=
 		`DROP TABLE Links ;`
@@ -80,7 +84,10 @@ func DropTable() error {
 // deletes expired records from db
 func ExpireRecord(hash string) error {
 	// get db instance
-	db := Connect()
+	db , err := Connect()
+	if err != nil {
+		return err
+	}
 	// deletes record from table if expired
 	query := 
 		`DELETE FROM Links WHERE (Hash = ? AND ExpiryDate <= NOW()) ;`
@@ -93,9 +100,12 @@ func ExpireRecord(hash string) error {
 // insert record into db
 func InsertRecord(link model.Link , expiryDate string) error {
 	// get db instance
-	db := Connect()
+	db , err := Connect()
+	if err != nil {
+		return err
+	}
 	// check if record has expired and return if so
-	err := ExpireRecord(link.Hash)
+	err = ExpireRecord(link.Hash)
 	if err != nil {
 		return err
 	}
@@ -121,7 +131,10 @@ func InsertRecord(link model.Link , expiryDate string) error {
 // increments UsedCount parameter of record in db by one
 func UpdateRecord(link model.Link) error {
 	// get db instance
-	db := Connect()
+	db , err := Connect()
+	if err != nil {
+		return err
+	}
 	// update UsedCount on specified record in table
 	query := 
 		`UPDATE Links SET UsedCount = ? WHERE Hash = ?`
@@ -134,10 +147,13 @@ func UpdateRecord(link model.Link) error {
 // finds record with specified hash and returns it
 func SelectRecord(hash string) (model.Link , error) {
 	// get db instance
-	db := Connect()
+	db , err := Connect()
 	link := model.Link{}
+	if err != nil {
+		return link , err
+	}
 	// check if record has expired and return if so
-	err := ExpireRecord(hash)
+	err = ExpireRecord(hash)
 	if err != nil {
 		return link , err
 	}
@@ -155,6 +171,6 @@ func SelectRecord(hash string) (model.Link , error) {
 		err = rows.Scan(&link.Hash , &link.URL , &link.UsedCount)
 		return link , nil
 	}
-	return link , errors.New("No Such Link or Linked Expired")
+	return link , errors.New(util.UnknownURLMessage())
 }
 

@@ -55,6 +55,11 @@
 	.buttons {
 		display: flex;
 	}
+	.radio_button {
+		position: absolute;
+		box-sizing: content-box;
+		width: 50%;
+	}
 
 	button {
 	  font-size: large;
@@ -73,12 +78,12 @@
 		<form action="/new" method="post">
 		    <input type="text" id="input" name="URL" placeholder="Enter Long URL Here">
 		    <input type="text" id="input" name="desired_shortlink" placeholder="Enter Desired Short URL Here">
-			<p>Expiry Date:</p>
-			<input type="radio" id="one_month" name="expiry_date" value="one_month">
+			<p>   Expiry Date:</p>
+			<input class="radio_button" type="radio" id="one_month" name="expiry_date" value="one_month">
 			<label for="one_month">1 Month</label><br>
-			<input type="radio" id="one_week" name="expiry_date" value="one_week">
+			<input class="radio_button" type="radio" id="one_week" name="expiry_date" value="one_week">
 			<label for="one_week">1 Week</label><br>
-			<input type="radio" id="one_day" name="expiry_date" value="one_day">
+			<input class="radio_button" type="radio" id="one_day" name="expiry_date" value="one_day">
 			<label for="one_day">1 Day</label>
 			<div class="buttons">
 			    <button type="submit" id="Shorten" value="new">Shorten</button>

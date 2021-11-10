@@ -41,7 +41,7 @@ func getHash(str string) string {
 func GetLink(URL string) Link {
 	return Link {getHash(URL) , URL , 0}
 }
-
+// sets new hash value for Link
 func (link *Link) SetHash(hash string) {
 	link.Hash = hash
 	return
