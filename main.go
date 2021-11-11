@@ -28,8 +28,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// TODO : Delete line below
-	err = db.DropTable()
 	err = db.CreateTable()
 	if err != nil {
 		panic(err)
