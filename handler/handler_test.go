@@ -3,7 +3,6 @@
 package handler
 
 import (
-	"fmt"
 	"time"
 	"testing"
 	"net/url"
@@ -22,6 +21,7 @@ func TestServer(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	err = db.DropTable()
 	err = db.CreateTable()
 	if err != nil {
 		t.Error(err)
@@ -39,28 +39,39 @@ func TestServer(t *testing.T) {
 	go func() {
 		server.Logger.Fatal(server.Start(":1323"))
 	}()
-	time.Sleep(time.Millisecond * 100)
 }
-func TestStoreLink(t *testing.T) {
+func TestHandler(t *testing.T) {
 	link := model.GetLink("http://aut.ac.ir")
 	link.SetHash("hell")
 	form := url.Values{}
 	form.Add("URL" , link.URL)
 	form.Add("desired_shortlink" , link.Hash)
 	resp , err := http.PostForm("http://localhost:1323/new" , form)
+	time.Sleep(time.Millisecond * 500)
 	if err != nil {
 		t.Error(err)
 	}
 	if resp.StatusCode != http.StatusOK {
-		t.Error("Invalid Status Code")
+		t.Error("Invalid Status Code" , resp.StatusCode)
 	}
 	linkSel , err := db.SelectRecord(link.Hash)
-	fmt.Println(linkSel , err)
 	if err != nil || linkSel.URL != link.URL {
 		t.Error("Unknown Link Error")
 	}
-}
-func TestShowUsage(t *testing.T) {
-	// TODO
+	resp , err = http.Get("http://localhost:1323/link/hell")
+	time.Sleep(time.Millisecond * 500)
+	if err != nil {
+		t.Error(err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		t.Error("Invalid Status Code" , resp.StatusCode)
+	}
+	linkSel , err = db.SelectRecord(link.Hash)
+	if err != nil {
+		t.Error(err)
+	}
+	if linkSel.UsedCount != 1 {
+		t.Error("Invalid Used Count Error")
+	}
 }
 
